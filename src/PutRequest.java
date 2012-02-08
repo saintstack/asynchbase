@@ -45,7 +45,8 @@ import org.jboss.netty.buffer.ChannelBuffer;
  * write will look like it was applied before the first one when you read
  * this cell back from HBase.  When manually setting timestamps, it is thus
  * strongly recommended to use real UNIX timestamps in milliseconds when
- * setting them manually, e.g. from {@link System#currentTimeMillis}.
+ * setting them manually, e.g. from {@link System#currentTimeMillis}.  This
+ * is what happens by default if you don't specify an explicit timestamp.
  * <p>
  * If you want to let HBase apply a timestamp on a write at the time it's
  * applied within the RegionServer, then use {@link KeyValue#TIMESTAMP_NOW}
@@ -99,7 +100,7 @@ public final class PutRequest extends BatchableRpc
                     final byte[] qualifier,
                     final byte[] value) {
     this(table, key, family, qualifier, value,
-         KeyValue.TIMESTAMP_NOW, RowLock.NO_LOCK);
+         System.currentTimeMillis(), RowLock.NO_LOCK);
   }
 
   /**
@@ -144,7 +145,7 @@ public final class PutRequest extends BatchableRpc
                     final byte[] value,
                     final RowLock lock) {
     this(table, key, family, qualifier, value,
-         KeyValue.TIMESTAMP_NOW, lock.id());
+         System.currentTimeMillis(), lock.id());
   }
 
   /**
@@ -189,7 +190,7 @@ public final class PutRequest extends BatchableRpc
                     final String value) {
     this(table.getBytes(), key.getBytes(), family.getBytes(),
          qualifier.getBytes(), value.getBytes(),
-         KeyValue.TIMESTAMP_NOW, RowLock.NO_LOCK);
+         System.currentTimeMillis(), RowLock.NO_LOCK);
   }
 
   /**
@@ -214,7 +215,7 @@ public final class PutRequest extends BatchableRpc
                     final RowLock lock) {
     this(table.getBytes(), key.getBytes(), family.getBytes(),
          qualifier.getBytes(), value.getBytes(),
-         KeyValue.TIMESTAMP_NOW, lock.id());
+         System.currentTimeMillis(), lock.id());
   }
 
   /**

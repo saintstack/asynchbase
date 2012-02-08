@@ -41,7 +41,8 @@ import org.jboss.netty.buffer.ChannelBuffer;
  * Irrespective of the order in which you send RPCs, a {@code DeleteRequest}
  * that is created with a specific timestamp in argument will only delete
  * values in HBase that were previously stored with a timestamp less than
- * or equal to that of the {@code DeleteRequest}.
+ * or equal to that of the {@code DeleteRequest}.  The default is to use
+ * {@link System#currentTimeMillis} to timestamp requests.
  */
 public final class DeleteRequest extends BatchableRpc
   implements HBaseRpc.HasTable, HBaseRpc.HasKey,
@@ -71,7 +72,7 @@ public final class DeleteRequest extends BatchableRpc
    * @throws IllegalArgumentException if any argument is malformed.
    */
   public DeleteRequest(final byte[] table, final byte[] key) {
-    this(table, key, null, null, KeyValue.TIMESTAMP_NOW, RowLock.NO_LOCK);
+    this(table, key, null, null, System.currentTimeMillis(), RowLock.NO_LOCK);
   }
 
   /**
@@ -100,7 +101,7 @@ public final class DeleteRequest extends BatchableRpc
   public DeleteRequest(final byte[] table,
                        final byte[] key,
                        final byte[] family) {
-    this(table, key, family, null, KeyValue.TIMESTAMP_NOW, RowLock.NO_LOCK);
+    this(table, key, family, null, System.currentTimeMillis(), RowLock.NO_LOCK);
   }
 
   /**
@@ -136,7 +137,7 @@ public final class DeleteRequest extends BatchableRpc
                        final byte[] qualifier) {
       this(table, key, family,
            qualifier == null ? null : new byte[][] { qualifier },
-           KeyValue.TIMESTAMP_NOW, RowLock.NO_LOCK);
+           System.currentTimeMillis(), RowLock.NO_LOCK);
   }
 
   /**
@@ -176,7 +177,7 @@ public final class DeleteRequest extends BatchableRpc
                        final byte[] family,
                        final byte[][] qualifiers) {
     this(table, key, family, qualifiers,
-         KeyValue.TIMESTAMP_NOW, RowLock.NO_LOCK);
+         System.currentTimeMillis(), RowLock.NO_LOCK);
   }
 
   /**
@@ -215,7 +216,7 @@ public final class DeleteRequest extends BatchableRpc
                        final RowLock lock) {
     this(table, key, family,
          qualifier == null ? null : new byte[][] { qualifier },
-         KeyValue.TIMESTAMP_NOW, lock.id());
+         System.currentTimeMillis(), lock.id());
   }
 
   /**
@@ -258,7 +259,7 @@ public final class DeleteRequest extends BatchableRpc
                        final byte[] family,
                        final byte[][] qualifiers,
                        final RowLock lock) {
-    this(table, key, family, qualifiers, KeyValue.TIMESTAMP_NOW, lock.id());
+    this(table, key, family, qualifiers, System.currentTimeMillis(), lock.id());
   }
 
   /**
@@ -291,7 +292,7 @@ public final class DeleteRequest extends BatchableRpc
    */
   public DeleteRequest(final String table, final String key) {
     this(table.getBytes(), key.getBytes(), null, null,
-         KeyValue.TIMESTAMP_NOW, RowLock.NO_LOCK);
+         System.currentTimeMillis(), RowLock.NO_LOCK);
   }
 
   /**
@@ -306,7 +307,7 @@ public final class DeleteRequest extends BatchableRpc
                        final String key,
                        final String family) {
     this(table.getBytes(), key.getBytes(), family.getBytes(), null,
-         KeyValue.TIMESTAMP_NOW, RowLock.NO_LOCK);
+         System.currentTimeMillis(), RowLock.NO_LOCK);
   }
 
   /**
@@ -324,7 +325,7 @@ public final class DeleteRequest extends BatchableRpc
                        final String qualifier) {
     this(table.getBytes(), key.getBytes(), family.getBytes(),
          qualifier == null ? null : new byte[][] { qualifier.getBytes() },
-         KeyValue.TIMESTAMP_NOW, RowLock.NO_LOCK);
+         System.currentTimeMillis(), RowLock.NO_LOCK);
   }
 
   /**
@@ -344,7 +345,7 @@ public final class DeleteRequest extends BatchableRpc
                        final RowLock lock) {
     this(table.getBytes(), key.getBytes(), family.getBytes(),
          qualifier == null ? null : new byte[][] { qualifier.getBytes() },
-         KeyValue.TIMESTAMP_NOW, lock.id());
+         System.currentTimeMillis(), lock.id());
   }
 
   /**
